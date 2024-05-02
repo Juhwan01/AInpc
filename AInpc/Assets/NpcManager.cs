@@ -40,7 +40,9 @@ public class NpcManager : MonoBehaviour
         {
             var chatResponse = response.Choices[0].Message;
             messages.Add(chatResponse);
+            Debug.Log(chatResponse.Content);
             GoogleTTS.Instance.RunTTS(chatResponse.Content, SystemLanguage.Korean);
+            //GoogleCloudTTS.Instance.RunTTS(chatResponse.Content);
         }
     }
 
