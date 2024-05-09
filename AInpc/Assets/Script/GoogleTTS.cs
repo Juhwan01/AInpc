@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Text;
 using UnityEngine.Networking;
+using System;
 
 public class GoogleTTS : MonoBehaviour
 {
@@ -53,44 +54,78 @@ public class GoogleTTS : MonoBehaviour
     //오디오를 다운로드 받습니다.
     private IEnumerator DownloadTheAudio(string text, SystemLanguage language = SystemLanguage.English)
     {
+        const int maxLength = 100;  // Google TTS에서 허용하는 최대 길이
+        int currentIndex = 0;       // 현재 처리 중인 텍스트 인덱스
+
+        while (currentIndex < text.Length)
+        {
+            // 처리할 텍스트 조각을 계산합니다.
+            int length = Math.Min(maxLength, text.Length - currentIndex);
+            string partText = text.Substring(currentIndex, length);
+            currentIndex += length;
+
+            // 현재 조각에 대한 오디오 다운로드 및 재생을 요청합니다.
+            yield return StartCoroutine(DownloadAndPlayAudio(partText, language));
+
+            // 다음 오디오가 재생되기 전에 현재 오디오 재생이 끝날 때까지 대기합니다.
+            while (mAudio.isPlaying)
+            {
+                yield return null;
+            }
+        }
+    }
+
+    private IEnumerator DownloadAndPlayAudio(string text, SystemLanguage language)
+    {
         mStrBuilder.Clear();
 
-        //텍스트 앞 Origin URL
+        // 접두사 URL을 추가합니다.
         mStrBuilder.Append(mPrefixURL);
 
-        //TTS로 변환할 텍스트
-        mStrBuilder.Append(text);
+        // TTS로 변환할 텍스트를 URL 인코딩합니다.
+        mStrBuilder.Append(WWW.EscapeURL(text));
         mStrBuilder.Replace('\n', '.');
 
-        //언어 인식을 위한 태그 추가 &tl=
+        // 언어 태그를 추가합니다.
         mStrBuilder.Append("&tl=");
 
-        //언어 식별
+        // 언어 코드를 식별하고 추가합니다.
         switch (language)
         {
             case SystemLanguage.Korean:
                 mStrBuilder.Append("ko-KR");
                 break;
-
             case SystemLanguage.English:
             default:
                 mStrBuilder.Append("en-GB");
                 break;
         }
 
+        // UnityWebRequest를 사용하여 오디오 클립을 가져옵니다.
         using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(mStrBuilder.ToString(), AudioType.MPEG))
         {
             yield return www.SendWebRequest();
 
-            if (www.result == UnityWebRequest.Result.ConnectionError)
+            // 연결 오류를 확인합니다.
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.Log(www.error);
             }
             else
             {
-                mAudio.clip = DownloadHandlerAudioClip.GetContent(www);
-                mAudio.Play();
+                // 오디오 클립을 가져오고 재생을 시도합니다.
+                try
+                {
+                    mAudio.clip = DownloadHandlerAudioClip.GetContent(www);
+                    mAudio.Play();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("오디오 클립 처리 중 오류 발생: " + ex.Message);
+                }
             }
         }
     }
+
+
 }
