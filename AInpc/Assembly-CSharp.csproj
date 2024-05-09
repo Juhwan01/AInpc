@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\NpcManager.cs" />
+    <Compile Include="Assets\count.cs" />
     <Compile Include="Assets\Script\NewBehaviourScript.cs" />
     <Compile Include="Assets\Script\GoogleCloudTTs.cs" />
     <Compile Include="Assets\Script\WavUtility.cs" />
