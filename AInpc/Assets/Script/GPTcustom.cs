@@ -19,7 +19,7 @@ public class GPTcustom : MonoBehaviour
             try
             {
                 Process psi = new Process();
-                psi.StartInfo.FileName = "C:/Anaconda3/envs/llm/python.exe";
+                psi.StartInfo.FileName = "C:/Users/wnghk/anaconda3/envs/llm/Scripts/ipython.exe";
                 // 가상환경의 Python 실행 파일 경로
 
                 psi.StartInfo.Arguments = Application.streamingAssetsPath + "/AI-Assistant.py";
@@ -36,7 +36,7 @@ public class GPTcustom : MonoBehaviour
                 // 표준 출력 및 오류를 리다이렉트
 
                 psi.OutputDataReceived += (sender, args) => UnityEngine.Debug.Log(args.Data);
-                psi.ErrorDataReceived += (sender, args) => UnityEngine.Debug.LogError(args.Data);
+                //psi.ErrorDataReceived += (sender, args) => UnityEngine.Debug.LogError(args.Data);
 
                 psi.Start();
                 psi.BeginOutputReadLine();

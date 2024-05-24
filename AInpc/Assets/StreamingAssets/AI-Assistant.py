@@ -22,10 +22,12 @@ import gdown
 # 필요한 라이브러리 import
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+import os
+print(os.getcwd())
 
 # 기본 정보 입력 및 API 열기
-creds_file_path = 'aiassistant-423712-eb47cff228a1.json'  # 올바른 서비스 계정 JSON 파일 경로 입력
-
+creds_file_path = 'C:/Users/wnghk/Desktop/AInpc/AInpc/Assets/StreamingAssets/aiassistant-423712-483e458b4945.json' # 올바른 서비스 계정 JSON 파일 경로 입력
+print(creds_file_path)
 # 파일에서 자격 증명 불러오기
 credentials = service_account.Credentials.from_service_account_file(
     creds_file_path, scopes=['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/documents.readonly'])
@@ -36,7 +38,7 @@ docs_service = build('docs', 'v1', credentials=credentials)
 
 # 폴더 ID 및 파일 이름 설정
 folder_id = "1OrIj8JXzMd-VMH2QkdH8Gm55-VXyyoUh"  # 폴더 ID 입력
-file_name = "회의록"  # 다운로드하려는 파일 이름 입력
+file_name = "스토리"  # 다운로드하려는 파일 이름 입력
 
 # 폴더 내의 파일 검색
 query = f"'{folder_id}' in parents and name = '{file_name}'"
@@ -103,7 +105,7 @@ def get_text_chunks(text):
 
 #주어진 텍스트 청크에 대한 임베딩을 생성하고 FAISS를 사용하여 벡터 저장소를 생성
 def get_vectorstore(text_chunks):
-    embeddings = SentenceTransformerEmbeddings(model_name='all-MiniLM-L6-v2')
+    embeddings = SentenceTransformerEmbeddings(model_name='sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
@@ -186,11 +188,14 @@ def process_question(question):
 #             print(answer)
 #             speak_response(answer)
 if __name__ == "__main__":
-    question = recognize_speech()
-    if question:
-        answer = process_question(question)
-        print(answer)
-        speak_response(answer)
+    while True:
+        question = recognize_speech()
+        if question=="멈춰":
+            break;
+        if question:
+            answer = process_question(question)
+            print(answer)
+            speak_response(answer)
 
 
 # In[ ]:

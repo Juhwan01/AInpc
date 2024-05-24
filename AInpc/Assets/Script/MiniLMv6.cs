@@ -25,7 +25,7 @@ public class MiniLM : MonoBehaviour
 {
     const BackendType backend = BackendType.GPUCompute;
 
-    string string1 = "That is a happy person";          // similarity = 1
+    string string1 = "That is a happy person";      // similarity = 1
 
     //Choose a string to comapre string1  to:
     string string2 = "That is a happy boy";             // similarity = 0.695
