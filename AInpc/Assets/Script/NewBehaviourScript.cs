@@ -57,7 +57,7 @@ public class NewBehaviourScript : MonoBehaviour
 			VoiceRecognize voiceRecognize = JsonUtility.FromJson<VoiceRecognize>(message);
 
 			Debug.Log("Voice Server responded: " + voiceRecognize.text);
-			NpcManager.Instance.AskChatGPT(voiceRecognize.text);
+			GPTcustom.Instance.answer(voiceRecognize.text);
 			// Voice Server responded: 인식결과
 		}
 	}

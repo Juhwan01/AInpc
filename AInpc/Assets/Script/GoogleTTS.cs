@@ -48,6 +48,7 @@ public class GoogleTTS : MonoBehaviour
     //외부에서 호출되며 문자열, 언어를 받아 코루틴을 실행시킵니다.
     public void RunTTS(string text, SystemLanguage language = SystemLanguage.English)
     {
+        Debug.Log(text);
         StartCoroutine(DownloadTheAudio(text, language));
     }
 
