@@ -22,60 +22,53 @@ public class GPTcustom : MonoBehaviour
 
     void Start()
     {
-        // GoogleTTS Å¬·¡½ºÀÇ ÀÎ½ºÅÏ½º¸¦ °¡Á®¿Í¼­ º¯¼ö¿¡ ÇÒ´ç
+        // GoogleTTS í´ë˜ìŠ¤ì˜ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ê°€ì ¸ì™€ì„œ ë³€ìˆ˜ì— í• ë‹¹
         googleTTS = GoogleTTS.Instance;
     }
     public void answer(string text) 
     {
-        // R Å°°¡ ´­·ÈÀ» ¶§ ½ÇÇà
+        // R í‚¤ê°€ ëˆŒë ¸ì„ ë•Œ ì‹¤í–‰
         try
         {
             Process psi = new Process();
             psi.StartInfo.FileName = "C:/Anaconda3/envs/llm/Scripts/ipython3.exe";
-            // °¡»óÈ¯°æÀÇ Python ½ÇÇà ÆÄÀÏ °æ·Î
+            // ê°€ìƒí™˜ê²½ì˜ Python ì‹¤í–‰ íŒŒì¼ ê²½ë¡œ
 
-            psi.StartInfo.Arguments = $"{Application.streamingAssetsPath}/AI-Assistant.py \"{text}\"";
+            psi.StartInfo.Arguments = $"{Application.streamingAssetsPath}/AI-Assistant.py {text}";
 
 
 
-            // ½ÇÇàÇÒ Python ÆÄÀÏ °æ·Î ¹× ÀÔ·Â °ª Àü´Ş
+            // ì‹¤í–‰í•  Python íŒŒì¼ ê²½ë¡œ ë° ì…ë ¥ ê°’ ì „ë‹¬
 
             psi.StartInfo.CreateNoWindow = true;
-            // »õ·Î¿î Ã¢À» »ı¼ºÇÏÁö ¾ÊÀ½
+            // ìƒˆë¡œìš´ ì°½ì„ ìƒì„±í•˜ì§€ ì•ŠìŒ
 
             psi.StartInfo.UseShellExecute = false;
-            // ¼ĞÀ» »ç¿ëÇÏÁö ¾ÊÀ½
+            // ì…¸ì„ ì‚¬ìš©í•˜ì§€ ì•ŠìŒ
 
             psi.StartInfo.RedirectStandardOutput = true;
             psi.StartInfo.RedirectStandardError = true;
-            // Ç¥ÁØ Ãâ·Â ¹× ¿À·ù¸¦ ¸®´ÙÀÌ·ºÆ®
+            // í‘œì¤€ ì¶œë ¥ ë° ì˜¤ë¥˜ë¥¼ ë¦¬ë‹¤ì´ë ‰íŠ¸
 
             psi.OutputDataReceived += (sender, args) =>
             {
-                // ¹Ş¾Æ¿Â µ¥ÀÌÅÍ°¡ print¹®¿¡ ÀÇÇÑ °ÍÀÎÁö È®ÀÎ
+                // ë°›ì•„ì˜¨ ë°ì´í„°ê°€ printë¬¸ì— ì˜í•œ ê²ƒì¸ì§€ í™•ì¸
                 if (!string.IsNullOrEmpty(args.Data) && !args.Data.StartsWith("Traceback") && !args.Data.StartsWith("File") && !args.Data.StartsWith("  "))
                 {
-                    // UTF-8·Î µğÄÚµù
-                    byte[] decodedBytes = System.Convert.FromBase64String(args.Data);
-                    string decodedText = System.Text.Encoding.UTF8.GetString(decodedBytes);
-
-                    UnityEngine.Debug.Log(decodedText);
-                    GoogleTTS.Instance.RunTTS(decodedText);
-                }
-                else
                     UnityEngine.Debug.Log(args.Data);
+                }
             };
-            //psi.OutputDataReceived += (sender, args) => UnityEngine.Debug.Log(args.Data);
+            
             //psi.OutputDataReceived += (sender, args) => GoogleTTS.Instance.RunTTS(args.Data);
             psi.Start();
             psi.BeginOutputReadLine();
             psi.BeginErrorReadLine();
 
-            UnityEngine.Debug.Log("[¾Ë¸²] .py ÆÄÀÏ ½ÇÇà");
+            UnityEngine.Debug.Log("[ì•Œë¦¼] .py íŒŒì¼ ì‹¤í–‰");
         }
         catch (Exception e)
         {
-            UnityEngine.Debug.LogError("[¾Ë¸²] ¿¡·¯ ¹ß»ı: " + e.Message);
+            UnityEngine.Debug.LogError("[ì•Œë¦¼] ì—ëŸ¬ ë°œìƒ: " + e.Message);
         }
     }
 }
