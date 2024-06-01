@@ -46,14 +46,14 @@ public class GoogleTTS : MonoBehaviour
     }
 
     //외부에서 호출되며 문자열, 언어를 받아 코루틴을 실행시킵니다.
-    public void RunTTS(string text, SystemLanguage language = SystemLanguage.English)
+    public void RunTTS(string text, SystemLanguage language = SystemLanguage.Korean)
     {
         Debug.Log(text);
         StartCoroutine(DownloadTheAudio(text, language));
     }
 
     //오디오를 다운로드 받습니다.
-    private IEnumerator DownloadTheAudio(string text, SystemLanguage language = SystemLanguage.English)
+    private IEnumerator DownloadTheAudio(string text, SystemLanguage language = SystemLanguage.Korean)
     {
         const int maxLength = 100;  // Google TTS에서 허용하는 최대 길이
         int currentIndex = 0;       // 현재 처리 중인 텍스트 인덱스

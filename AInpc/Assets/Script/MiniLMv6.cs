@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Sentis;
 using System.IO;
@@ -23,14 +23,8 @@ using FF = Unity.Sentis.Functional;
 
 public class MiniLM : MonoBehaviour
 {
+    private static MiniLM instance;
     const BackendType backend = BackendType.GPUCompute;
-
-    string string1 = "That is a happy person";      // similarity = 1
-
-    //Choose a string to comapre string1  to:
-    string string2 = "That is a happy boy";             // similarity = 0.695
-    //string string2 = "That is a very happy person";   // similarity = 0.943
-    //string string2 = "Today is a sunny day";          // similarity = 0.257
 
     //Special tokens
     const int START_TOKEN = 101; 
@@ -43,7 +37,31 @@ public class MiniLM : MonoBehaviour
 
     IWorker engine, dotScore;
 
-    void Start()
+    public static MiniLM Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                Debug.LogError("ServerController2 instance is null. Make sure the script is attached to an active GameObject in the scene.");
+            }
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        // 싱글톤 인스턴스 설정
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void getScore(string str1,string str2) 
     {
         tokens = File.ReadAllLines(Application.streamingAssetsPath + "/vocab.txt");
 
@@ -51,8 +69,8 @@ public class MiniLM : MonoBehaviour
 
         dotScore = CreateDotScoreModel();
 
-        var tokens1 = GetTokens(string1);
-        var tokens2 = GetTokens(string2);
+        var tokens1 = GetTokens(str1);
+        var tokens2 = GetTokens(str2);
 
         using TensorFloat embedding1 = GetEmbedding(tokens1);
         using TensorFloat embedding2 = GetEmbedding(tokens2);
@@ -61,7 +79,6 @@ public class MiniLM : MonoBehaviour
 
         Debug.Log("Similarity Score: " + score);
     }
-
     float GetDotScore(TensorFloat A, TensorFloat B)
     {
         var inputs = new Dictionary<string, Tensor>()
