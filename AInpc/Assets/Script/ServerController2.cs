@@ -57,7 +57,7 @@ public class ServerController2 : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ask(text)); // 코루틴 호출하여 질문을 전송
+        StartCoroutine(ask("알고리즘이 뭐야?")); // 코루틴 호출하여 질문을 전송
     }
 
     // 질문을 서버에 전송하는 코루틴

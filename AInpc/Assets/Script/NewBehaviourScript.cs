@@ -16,7 +16,7 @@ public class NewBehaviourScript : MonoBehaviour
 
 	private void Start()
 	{
-		_microphoneID = Microphone.devices[0];
+		//_microphoneID = Microphone.devices[0];
 	}
 	// 받아온 값에 간편하게 접근하기 위한 JSON 선언
 	[Serializable]
