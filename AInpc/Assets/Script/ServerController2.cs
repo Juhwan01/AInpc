@@ -35,7 +35,7 @@ public class ServerController2 : MonoBehaviour
     }
 
     // API의 기본 URL
-    private string baseUrl = "http://127.0.0.1:8000";
+    private string baseUrl = "https://port-0-pariesus-ss7z32llwt50wea.sel5.cloudtype.app";
 
     // 서버 요청에 사용될 DTO (Data Transfer Object) 클래스
     public class RequestDTO
@@ -57,7 +57,7 @@ public class ServerController2 : MonoBehaviour
             return;
         }
 
-        StartCoroutine(ask("알고리즘이 뭐야?")); // 코루틴 호출하여 질문을 전송
+        StartCoroutine(ask(text)); // 코루틴 호출하여 질문을 전송
     }
 
     // 질문을 서버에 전송하는 코루틴
@@ -97,7 +97,7 @@ public class ServerController2 : MonoBehaviour
                 if (GoogleTTS.Instance != null)
                 {
                     GoogleTTS.Instance.RunTTS(responseText); // 응답 텍스트를 음성으로 변환
-                    StartCoroutine(checkScore(responseText,"주인공은 보경입니다"));
+                    //StartCoroutine(checkScore(responseText,"주인공은 보경입니다"));
                 }
                 else
                 {
@@ -106,40 +106,40 @@ public class ServerController2 : MonoBehaviour
             }
         }
     }
-    IEnumerator checkScore(string text1,string text2)
-    {
-        // DTO 객체 생성 및 JSON 직렬화
-        CheckDTO checkDTO = new CheckDTO { question1 = text1, question2 = text2};
-        string jsonData = JsonConvert.SerializeObject(checkDTO);
+    //IEnumerator checkScore(string text1,string text2)
+    //{
+    //    // DTO 객체 생성 및 JSON 직렬화
+    //    CheckDTO checkDTO = new CheckDTO { question1 = text1, question2 = text2};
+    //    string jsonData = JsonConvert.SerializeObject(checkDTO);
 
-        // POST 요청을 생성
-        using (UnityWebRequest request = new UnityWebRequest($"{baseUrl}/check", "POST"))
-        {
-            // JSON 데이터를 바이트 배열로 변환
-            byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(jsonData);
+    //    // POST 요청을 생성
+    //    using (UnityWebRequest request = new UnityWebRequest($"{baseUrl}/check", "POST"))
+    //    {
+    //        // JSON 데이터를 바이트 배열로 변환
+    //        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(jsonData);
 
-            // 요청의 업로드 핸들러와 다운로드 핸들러 설정
-            request.uploadHandler = new UploadHandlerRaw(jsonToSend);
-            request.downloadHandler = new DownloadHandlerBuffer();
+    //        // 요청의 업로드 핸들러와 다운로드 핸들러 설정
+    //        request.uploadHandler = new UploadHandlerRaw(jsonToSend);
+    //        request.downloadHandler = new DownloadHandlerBuffer();
 
-            // 요청 헤더 설정
-            request.SetRequestHeader("Content-Type", "application/json");
+    //        // 요청 헤더 설정
+    //        request.SetRequestHeader("Content-Type", "application/json");
 
-            // 요청을 전송하고 응답을 기다림
-            yield return request.SendWebRequest();
+    //        // 요청을 전송하고 응답을 기다림
+    //        yield return request.SendWebRequest();
 
-            // 요청 결과에 따라 처리
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                // 오류 발생 시 오류 메시지 출력
-                Debug.LogError($"Error: {request.error}");
-            }
-            else
-            {
-                // 응답 데이터 처리
-                string responseText = request.downloadHandler.text;
-                Debug.Log(responseText);
-            }
-        }
-    }
+    //        // 요청 결과에 따라 처리
+    //        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+    //        {
+    //            // 오류 발생 시 오류 메시지 출력
+    //            Debug.LogError($"Error: {request.error}");
+    //        }
+    //        else
+    //        {
+    //            // 응답 데이터 처리
+    //            string responseText = request.downloadHandler.text;
+    //            Debug.Log(responseText);
+    //        }
+    //    }
+    //}
 }
